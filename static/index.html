@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Void Network</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="./assets/favicon.png" type="image/png">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/index.css">
+    
+    <!-- Scripts -->
+    <script src="/config.js"></script>
+    <script src="/global.js"></script>
+    <script src="uv/uv.bundle.js"></script>
+    <script src="uv/uv.config.js"></script>
+    <script src="/assets/js/favicon-handler.js"></script>
+
+    <!-- Loading Styles -->
+    <style id="loading-style">
+        body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden}
+        #loadingOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#000 0,#1a1a1a 100%);display:flex;justify-content:center;align-items:center;z-index:999999;transition:opacity 1s ease-in-out}
+        #loadingContainer{text-align:center;color:#fff}
+        #loadingLogo{width:200px;height:200px;margin-bottom:30px;opacity:0;animation:fadeIn 1s ease-in-out forwards}
+        #loadingLogo img{width:100%;height:100%;object-fit:contain;filter:brightness(1.2)}
+        #loadingText{font-size:1.5rem;text-align:center;color:#fff;margin-bottom:10px;letter-spacing:.2em;text-transform:uppercase;opacity:0;animation:slideIn 2s ease-in-out forwards}
+        #loadingBar{width:200px;height:2px;background:#1a1a1a;margin:20px auto;position:relative;border-radius:15px;overflow:hidden}
+        #progressFill{height:100%;width:0;background:#fff;position:absolute;transition:width .1s linear}
+        .dots::after{content:'';animation:dotAnimation 2s infinite}
+        @keyframes dotAnimation{0%{content:''}25%{content:'.'}50%{content:'..'}75%{content:'...'}100%{content:''}}
+        @keyframes fadeIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+        @keyframes slideIn{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}
+        }
+        .fade-out{opacity:0;pointer-events:none}
+    </style>
+
+    <!-- Additional Styles -->
+    <style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse at center, #111, #000);
+        color: #fff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        overflow: hidden;
+    }
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .games-box {
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 12px;
+        width: 80%;
+        max-width: 1000px;
+        height: 70vh;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        padding: 2px;
+        backdrop-filter: blur(8px);
+        box-shadow: 
+            0 0 4px rgba(255, 255, 255, 0.1),
+            0 0 8px rgba(255, 255, 255, 0.2);
+        z-index: 3;
+        overflow: hidden;
+    }
+
+    .games-box::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        background: linear-gradient(45deg, rgba(255,255,255,0.15), transparent, rgba(255,255,255,0.15));
+        border-radius: 12px;
+        z-index: -1;
+        filter: blur(12px);
+        animation: neonPulse 3s ease-in-out infinite;
+        opacity: 0.7;
+    }
+
+    @keyframes neonPulse {
+        0%, 100% {
+            opacity: 0.7;
+        }
+        50% {
+            opacity: 1;
+        }
+    }
+
+    .games-header {
+        padding: 1.5rem;
+        text-align: center;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+        z-index: 1;
+    }
+
+    .site-title {
+        font-size: 2.5rem;
+        margin: 0 0 0.5rem 0;
+        background: linear-gradient(45deg, #fff, #ccc);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .games-title {
+        font-size: 1.2rem;
+        margin: 0.5rem 0;
+        color: #aaa;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    #searchGames {
+        width: 80%;
+        max-width: 400px;
+        padding: 0.8rem 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #fff;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        margin: 1rem auto 0 auto;
+        display: block;
+    }
+
+    #searchGames:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    #searchGames::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+    }
+    .scrollable-content {
+        overflow-y: auto;
+        flex-grow: 1;
+        padding: 1.5rem;
+    }
+
+    .games-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    .games-grid::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .games-grid::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        margin: 4px;
+        border-radius: 4px;
+    }
+
+    .games-grid::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 4px;
+    }
+
+    .games-grid::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.3);
+    }
+
+    .game-item {
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+        cursor: pointer;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.8rem;
+    }
+
+    .game-item:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .game-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    .game-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .game-title {
+        font-size: 1rem;
+        color: #fff;
+        margin: 0;
+        font-weight: normal;
+        transition: color 0.3s ease, text-shadow 0.3s ease;
+    }
+
+    .game-item:hover .game-title {
+        color: #fff;
+        text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+    }
+
+    @media (max-width: 768px) {
+        .games-box {
+            width: 95%;
+            height: 80vh;
+        }
+        
+        .games-grid {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        }
+        
+        .game-icon {
+            width: 48px;
+            height: 48px;
+        }
+        
+        .game-title {
+            font-size: 0.9rem;
+        }
+        
+        .site-title {
+            font-size: 2rem;
+        }
+
+        .scrollable-content {
+            padding: 1rem;
+        }
+    }
+    </style>
+</head>
+
+<body>
+
+    <div id="header"></div>
+        
+    <div class="container">
+        <div class="games-box">
+            <div class="games-header">
+                <h1 class="site-title">Void Network: Enhanced</h1>
+                <h2 class="games-title">Games</h2>
+                <input type="text" id="searchGames" placeholder="Search games...">
+            </div>
+
+            <div class="scrollable-content">
+                <div class="games-grid" id="gamesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+<!-- Loading Styles -->
+<style id="loading-style">
+    #loadingOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #000 0%, #1a1a1a 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 999999;
+        transition: opacity 1s ease-in-out;
+    }
+
+    #loadingContainer {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    #loadingLogo {
+        width: 250px;
+        height: 250px;
+        perspective: 1000px;
+    }
+
+    #loadingLogo img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 40px;
+        box-shadow: 0 15px 35px rgba(255,255,255,0.2);
+        animation: wave-and-float 2.5s ease-in-out infinite;
+        transition: transform 0.3s ease;
+    }
+
+    #loadingText {
+        color: #fff;
+        font-size: 1.5rem;
+        letter-spacing: 3px;
+        font-weight: 300;
+        opacity: 0.8;
+    }
+
+    .dots::after {
+        content: '.';
+        display: inline-block;
+        animation: pulsing-dots 1.4s infinite;
+    }
+
+    #loadingBar {
+        width: 400px;
+        height: 10px;
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 20px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    #progressFill {
+        width: 0;
+        height: 100%;
+        background: linear-gradient(
+            90deg, 
+            rgba(255,255,255,0.1) 0%, 
+            rgba(255,255,255,0.5) 50%, 
+            rgba(255,255,255,0.1) 100%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite linear;
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes wave-and-float {
+        0%, 100% { transform: translateY(0) rotate(-5deg); }
+        50% { transform: translateY(-20px) rotate(5deg); }
+    }
+
+    @keyframes pulsing-dots {
+        0%, 20% { content: '.'; }
+        33%, 53% { content: '..'; }
+        66%, 100% { content: '...'; }
+    }
+
+    @keyframes shimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    .fade-out {
+        opacity: 0;
+        pointer-events: none;
+    }
+</style>
+
+
+
+<!-- Service Worker Registration -->
+<script>
+    const stockSW = "/uv/sw.js";
+    const swAllowedHostnames = ["localhost", "127.0.0.1"];
+    function registerSW() {
+        if (!navigator.serviceWorker) {
+            if (location.protocol !== "https:" && !swAllowedHostnames.includes(location.hostname))
+                throw new Error("Service workers cannot be registered without https.");
+            throw new Error("Your browser doesn't support service workers.");
+        }
+        navigator.serviceWorker.register(stockSW);
+    }
+    registerSW();  
+</script>
+
+<!-- Games Loading and Header/Footer Inclusion -->
+<script type="module">
+    try {
+        const gamesList = document.getElementById("gamesList");
+        
+        await new Promise(resolve => {
+            if (window.__uv$config) {
+                resolve();
+            } else {
+                const checkUV = setInterval(() => {
+                    if (window.__uv$config) {
+                        clearInterval(checkUV);
+                        resolve();
+                    }
+                }, 100);
+            }
+        });
+
+        const { gamesData } = await import("/assets/json/games.js");
+        const { games2Data } = await import("/assets/json/games2.js");
+        
+        const games = [...gamesData, ...games2Data];
+
+        function loadGame(game) {
+            const gameElement = document.createElement("div");
+            gameElement.className = "game-item";
+            gameElement.innerHTML = `<div class="game-icon">
+                    <img src="${game.imgSrc}" alt="${game.title} icon">
+                </div>
+                <h3 class="game-title">${game.title}</h3>
+            `;
+            gameElement.onclick = () => {
+                window.location.href = `/Classes.html?game=${encodeURIComponent(game.link)}`;
+            };
+            gamesList.appendChild(gameElement);
+        }
+
+        if (Array.isArray(games)) {
+            games.forEach(game => {
+                loadGame(game);
+            });
+        } else {
+            console.error("Games is not an array:", games);
+            gamesList.innerHTML = '<div style="color: white;">Error: Games data is not in the correct format</div>';
+        }
+
+        document.getElementById("searchGames").addEventListener("keyup", function(e) {
+            gamesList.innerHTML = '';
+            const searchTerm = this.value.toLowerCase();
+            for (const game of games) {
+                if (game.title.toLowerCase().includes(searchTerm)) {
+                    loadGame(game);
+                }
+            }
+        });
+    } catch (error) {
+        console.error("Error loading games:", error);
+        gamesList.innerHTML = `<div style="color: white;">Error loading games: ${error.message}</div>`;
+    }
+    loadHTML("/assets/html/header.html", "header"),
+    loadHTML("/assets/html/footer.html", "footer")
+</script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+<html>
+  <head>
+    <script src="/config.js"></script>
+    <link rel="stylesheet" href="/assets/css/styles.css" type="text/css">   
+    <script src="/assets/js/particles.js"></script> <!-- Load particles.js -->
+    <script>
+      particlesJS.load('particles-js', '/assets/json/particles.json'); <!-- Initialize particles effect -->
+    </script>
+    <script>
+        function redirect(location) {
+            window.location.href = location;
+        }
+    </script>
+  </head>
+
+  <body>
+    <!-- Add particles background as a separate element -->
+    <div id="particles-js"></div> <!-- Container for particles -->
+
+    <!-- Ensure header is visible -->
+    <div id="header" class="content">
+      <!-- Temporary content to ensure header visibility -->
+      <p>Loading header...</p>
+    </div>
+
+    <div>
+      <br><br><br>
+
+      <h1>Credits:</h1>
+      <p>
+        Owner - Void network
+        <br><br>
+        Developer (Backend/frontend) - Shrey719 (segfault)
+        <br><br>
+        Also thanks to nobodycares (nobodycares_io) for helping with the VPS
+        <br><br>
+        <strong>AND COOLEST OF ALL Treme-CMD FOR THIS AWESOME (Although not completely needed) REVAMP!!!!!!</strong>
+      </p>
+    </div>
+
+    <!-- Ensure footer is visible -->
+    <div id="footer" class="content">
+      <!-- Temporary content to ensure footer visibility -->
+      <p>Loading footer...</p>
+    </div>
+
+    <script>
+      function loadHTML(url, elementId) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            document.getElementById(elementId).innerHTML = xhr.responseText;
+          }
+        };
+        xhr.send();
+      }
+
+      // Load header and footer HTML files
+      loadHTML("/assets/html/header.html", "header");
+      loadHTML("/assets/html/footer.html", "footer");
+    </script>
+
+    <style>
+      /* Apply the Orbitron font for a futuristic style */
+      @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+      body {
+        background-color: rgb(41, 41, 41); /* Updated to rgb(41, 41, 41) */
+        font-family: 'Orbitron', sans-serif;
+        color: #d1d1d1; /* Light gray font color */
+        margin: 0;
+        padding: 0;
+        text-align: center;
+        overflow-x: hidden;
+      }
+
+      h1 {
+        font-size: 3em;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        position: relative;
+        color: white; /* Change text color to white */
+        animation: glowBlue 3s infinite alternate; /* Add subtle animation */
+      }
+
+      p {
+        font-size: 1.5em;
+        line-height: 1.8;
+        animation: slideIn 2s ease-out;
+      }
+
+      /* Slight dark blue glowing effect with animation */
+      @keyframes glowBlue {
+        0% {
+          text-shadow: 0 0 5px #001f4d, 0 0 10px #001f4d, 0 0 15px #001f4d;
+        }
+        100% {
+          text-shadow: 0 0 10px #001f4d, 0 0 20px #001f4d, 0 0 30px #001f4d;
+        }
+      }
+
+      /* Smooth slide-in effect for paragraphs */
+      @keyframes slideIn {
+        0% {
+          opacity: 0;
+          transform: translateX(-100%);
+        }
+        100% {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      /* Style for the particles background */
+      #particles-js {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* Keeps it behind the content */
+      }
+
+      /* Ensure content has a higher z-index than particles */
+      .content {
+        position: relative;
+        z-index: 1; /* Keep header and footer above particles background */
+        color: white;
+      }
+    </style>
+
+  </body>
+</html>

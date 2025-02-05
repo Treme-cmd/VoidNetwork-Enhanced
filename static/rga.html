@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<head>
+<html lang="en">
+<script>(function(){function setupAntiClose(){window.addEventListener('beforeunload',showWarning);window.addEventListener('keydown',handleKeyPress);updateActiveState(true)}function removeAntiClose(){window.removeEventListener('beforeunload',showWarning);window.removeEventListener('keydown',handleKeyPress);updateActiveState(false)}function handleKeyPress(e){if((e.ctrlKey&&e.key==='w')||(e.metaKey&&e.key==='w')){{if(localStorage.getItem('anticlose')==='true'){e.preventDefault();e.returnValue='Leave site? Changes you made may not be saved.';return e.returnValue}}}}function showWarning(e){if(!e.target.location.href.includes("redirect")&&localStorage.getItem('anticlose')==='true'){e.preventDefault();e.returnValue='Leave site? Changes you made may not be saved.';return e.returnValue}}function updateActiveState(isActive){const checkbox=document.getElementById('cbox_anticlose');if(checkbox){checkbox.checked=isActive}}function initAntiClose(){const isEnabled=localStorage.getItem('anticlose')==='true';if(isEnabled){setupAntiClose()}else if(localStorage.getItem('anticlose')===null){localStorage.setItem('anticlose','false')}updateActiveState(isEnabled)}window.addEventListener('storage',function(e){if(e.key==='anticlose'){if(e.newValue==='true'){setupAntiClose()}else{removeAntiClose()}}});if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initAntiClose)}else{initAntiClose()}})();</script><head>
+  <script src="/assets/js/favicon-handler.js"></script>
+
+        <!-- Snowfall Effect Styles -->
+    <style>
+        #snowflakes-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -11; /* Put behind content */
+        }
+        .snowflake {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+    </style>
+
+    <!-- Snowfall Effect Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Create container
+            const snowflakesContainer = document.createElement('div');
+            snowflakesContainer.id = 'snowflakes-container';
+            document.body.appendChild(snowflakesContainer);
+
+            // Snowfall logic
+            const snowflakesCount = 200;
+
+            function createSnowflake() {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.style.width = `${Math.random() * 5 + 2}px`;
+                snowflake.style.height = snowflake.style.width;
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                snowflake.style.opacity = Math.random();
+                return snowflake;
+            }
+
+            // Create animation style
+            const styleSheet = document.createElement('style');
+            styleSheet.textContent = `
+                @keyframes fall {
+                    0% {
+                        transform: translateY(-100vh);
+                    }
+                    100% {
+                        transform: translateY(100vh);
+                    }
+                }
+            `;
+            document.head.appendChild(styleSheet);
+
+            // Create snowflakes
+            for (let i = 0; i < snowflakesCount; i++) {
+                const snowflake = createSnowflake();
+                snowflake.style.animation = `fall ${snowflake.style.animationDuration} linear infinite`;
+                snowflakesContainer.appendChild(snowflake);
+            }
+        });
+    </script>
+    <link rel="stylesheet" href="/assets/css/styles.css" type="text/css">
+    <script src="/global.js"></script>
+    <script src="/config.js"></script>
+    <!-- UV things -->
+    <script src="uv/uv.bundle.js"></script>
+    <script src="uv/uv.config.js"></script>
+    <style>
+        /* Add CSS for particle background */
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Flex container for aligning the forms */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 30px;
+            z-index: 1;
+            padding: 0;
+            margin: 0;
+        }
+
+        .form-section {
+            width: 25vw;
+            height: 25vw;
+            background-color: #f5f5f5;
+            border-radius: 15px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            border-radius: 15px;
+            border: none;
+        }
+
+        .title {
+            font-size: 1.5rem;
+            text-align: center;
+            color: #fff;
+            margin-bottom: 10px;
+            position: relative;
+            animation: slideIn 2s ease-in-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+    <script src="/assets/js/particles.js"></script>
+    <script>
+        particlesJS.load('particles-js', '/assets/json/particles.json');
+    </script>
+
+    <!-- Dynamically Loaded Header -->
+    <div id="header"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Report a Problem Section -->
+        <div>
+            <h2 class="title">Report a Problem</h2>
+            <div class="form-section">
+                <iframe src="https://forms.gle/rH8M3bZu4EgnNLuY6"></iframe>
+            </div>
+        </div>
+
+        <!-- Request Game Section -->
+        <div>
+            <h2 class="title">Request Game</h2>
+            <div class="form-section">
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfmxNuQjS30rZ2lESigysJOk0HRDCpOx3KafcH_QLR_tHhLNw/viewform?usp=sf_link"></iframe>
+            </div>
+        </div>
+
+        <!-- Request App Section -->
+        <div>
+            <h2 class="title">Request App</h2>
+            <div class="form-section">
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScS0SvCLQcuINB4Vt2v8YxKrO_o11pPkv766FjLGRVd03Q3TQ/viewform?usp=sf_link"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dynamically Loaded Footer -->
+    <div id="footer"></div>
+
+    <script>
+        function loadHTML(url, elementId) {
+            fetch(url)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById(elementId).innerHTML = data;
+                });
+        }
+
+        // Load header and footer
+        loadHTML("/assets/html/header.html", "header");
+        loadHTML("/assets/html/footer.html", "footer");
+
+        // Register Service Worker
+        const stockSW = "/uv/sw.js";
+        const swAllowedHostnames = ["localhost", "127.0.0.1"];
+
+        function registerSW() {
+            if (!navigator.serviceWorker) {
+                if (location.protocol !== "https:" && !swAllowedHostnames.includes(location.hostname))
+                    throw new Error("Service workers cannot be registered without https.");
+                throw new Error("Your browser doesn't support service workers.");
+            }
+
+            navigator.serviceWorker.register(stockSW);
+        }
+        registerSW();
+    </script>
+</body>
+</html>

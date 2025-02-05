@@ -1,0 +1,77 @@
+<style>
+.footer {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, rgba(20,20,20,0.95) 0%, rgba(30,30,30,0.95) 50%, rgba(20,20,20,0.95) 100%);
+    color: white;
+    padding: 1rem;
+    z-index: 20;
+    font-size: 0.8rem; 
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.4);
+    transition: all 0.3s ease;
+}
+
+.footer:hover {
+    background: linear-gradient(90deg, rgba(15,15,15,0.98) 0%, rgba(25,25,25,0.98) 50%, rgba(15,15,15,0.98) 100%);
+}
+
+.footer_icon {
+    background-color: transparent;
+    border: none;
+    height: 3vh;
+    width: 3vh;
+    margin: 0 1.5rem;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+}
+
+.footer_icon:hover {
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+</style>
+
+<footer class="footer">
+    <a href="/settings">
+        <img src="/nav/settings.png" class="footer_icon" alt="Settings">
+    </a>
+
+    <a href="https://discord.gg/dhX9rUVfgj">
+        <img src="/nav/discord.webp" class="footer_icon" alt="Discord">
+    </a>
+
+    <a href="/rga">
+        <img src="/nav/contact.png" class="footer_icon" alt="Contact">
+    </a>
+    <a href="/chat.html">
+        <img src="/nav/chat_icon.png" class="footer_icon" alt="Contact">
+    </a>
+    <a href="/privacypolicy.html">
+        <img src="/nav/prpo.png" class="footer_icon" alt="Contact">
+    </a>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+    const icons = document.querySelectorAll('.footer_icon');
+    icons.forEach((icon, index) => {
+        setTimeout(() => {
+            icon.style.animation = 'pulse 2s infinite';
+        }, index * 200);
+    });
+});
+</script>

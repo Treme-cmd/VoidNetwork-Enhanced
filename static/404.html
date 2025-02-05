@@ -1,0 +1,58 @@
+<html>
+    
+<head>
+<script src="/assets/components/shadowroot.js"></script>
+<script>
+
+    if (localStorage.getItem('cloaking') === 'true' && location === parent.location) {
+        const popup = open("about:blank", "_blank");
+        if (!popup || popup.closed) {
+        alert("Please allow popup and redirects for this site, this will make about blank cloaking work");
+        } 
+        const doc = popup.document;
+        iframe = popup.document.createElement("iframe")
+        const style = iframe.style 
+        popup.document.title = "My Drive - Google Drive"
+        iframe.src = location.href
+        style.position = "fixed";
+        style.top = style.bottom = style.left = style.right = 0;
+        style.border = style.outline = "none";
+        style.width = style.height = "100%";
+        doc.head.appendChild(doc.createElement("link"));
+        doc.body.appendChild(iframe);
+        location.replace("https://classroom.google.com")
+    }
+</script>
+</head>
+<body>
+<head>
+<script src="/config.js"></script>
+<link rel="stylesheet" href="/assets/css/styles.css" type="text/css">   
+<script>
+    function redirect(location) {
+        window.location.href = location
+    }
+</script>
+<title>404</title>
+
+</head>
+<body>
+    <div class="allDiv">
+    <footer class="footer">
+        <a class="footer_link" onclick="location.href=htmlConfig.creditsPath">Credits</a>
+        <a class="footer_link" onclick="location.href=htmlConfig.settingsPath">Settings</a>
+        <a class="footer_link" href="https://discord.gg/RTPATnD7ke">Dis<x>co</x>rd</a>
+    </footer>
+    <header class="header">
+        <a class="header_link" href="/">Home</a>
+        <a class="header_link" onclick="location.href=htmlConfig.gamesPath">Ga<x>m</x>es</a>
+        <a class="header_link" onclick="location.href=htmlConfig.searchPath">Search</a>
+        <a class="header_link" onclick="location.href = htmlConfig.appsPath">Apps</a>
+    </header>
+    <br><br><br>
+    <h1 style="color: white;">404: Not found</h1>
+</body>
+<script>
+    document.getElementById("ver").innerHTML = siteConfig.version
+</script>
+</html>

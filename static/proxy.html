@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Void Network</title>
+    
+    <!-- Scripts -->
+    <script src="/assets/js/favicon-handler.js"></script>
+    <script src="/assets/js/ads.js"></script>
+    <script src="uv/uv.bundle.js"></script>
+    <script src="uv/uv.config.js"></script> 
+    <script src="/config.js"></script>
+    <script src="/global.js"></script>
+    <script src="/assets/js/particles.js"></script>
+    <script src="/assets/js/adblock.js"></script>
+
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <style>
+        body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background: #0a0a0a;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        overflow: hidden;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .search-box {
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 12px;
+        width: 80%;
+        max-width: 900px;
+        padding: 2rem;
+        position: relative;
+        box-shadow: 
+            0 0 3px rgba(255, 255, 255, 0.2),
+            0 0 6px rgba(255, 255, 255, 0.2),
+            0 0 10px rgba(255, 255, 255, 0.2),
+            inset 0 0 3px rgba(255, 255, 255, 0.1);
+        z-index: 3;
+        backdrop-filter: blur(10px);
+    }
+
+    .search-box::before {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        background: transparent;
+        border-radius: 12px;
+        z-index: -1;
+        box-shadow: 
+            0 0 10px rgba(255, 255, 255, 0.3),
+            0 0 20px rgba(255, 255, 255, 0.2),
+            0 0 30px rgba(255, 255, 255, 0.1);
+        opacity: 0.5;
+    }
+
+    .site-title {
+        font-size: 2.5rem;
+        margin: 0 0 1.5rem 0;
+        text-align: center;
+        background: linear-gradient(45deg, #ffffff, #bbbbbb);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-weight: bold;
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+    }
+
+    #uvsearch {
+        width: 100%;
+        max-width: 600px;
+        padding: 1rem 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 25px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        font-size: 1.2rem;
+        transition: all 0.3s ease-in-out;
+        margin: 0 auto;
+        display: block;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+    }
+
+    #uvsearch:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+    #uvsearch::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .search-box {
+            width: 95%;
+            padding: 1.5rem;
+        }
+        
+        .site-title {
+            font-size: 2rem;
+        }
+
+        #uvsearch {
+            font-size: 1rem;
+            padding: 0.8rem 1.2rem;
+        }
+    }
+    </style>
+</head>
+<body>
+
+
+    <div id="header"></div>
+
+    <div class="container">
+        <div class="search-box">
+            <h1 class="site-title">Void Network</h1>
+            <input type="text" id="uvsearch" onkeypress="handleSearch(event)" placeholder="Search the web...">
+        </div>
+    </div>
+
+    <div id="footer"></div>
+
+    <script>
+        loadHTML("/assets/html/header.html", "header");
+        loadHTML("/assets/html/footer.html", "footer");
+
+        function parseSearch(str) {
+            if (str.includes("http") && str.includes(":")) {
+                return str;
+            }
+            if (str.includes(".")) {
+                return "https://" + str;
+            }
+            return "https://duckduckgo.com/?t=h_&q=" + str;
+        }
+        
+        function handleSearch(e) {
+            if (e.key === 'Enter') {
+                let url = parseSearch(document.getElementById("uvsearch").value);
+                let encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(url);
+                location.href = "/Classes.html?game=" + encodeURIComponent(encodedUrl);
+                e.preventDefault();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="/config.js"></script>
+  <link rel="shortcut icon" href="./assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/css/index.css">
+  <script src="/global.js"></script>
+  <script src="uv/uv.bundle.js"></script>
+  <script src="uv/uv.config.js"></script>
+  <script src="/assets/js/favicon-handler.js"></script>
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at center, #111, #000);
+      color: #fff;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes moveStar {
+      from { transform: translateY(0); }
+      to { transform: translateY(100vh); }
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: #fff;
+      border-radius: 50%;
+      animation: moveStar linear infinite;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .games-box {
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 10px;
+      width: 80%;
+      max-width: 1000px;
+      height: 70vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding: 2px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 4px rgba(255, 255, 255, 0.1), 0 0 8px rgba(255, 255, 255, 0.2);
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .games-box::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(45deg, rgba(255,255,255,0.15), transparent, rgba(255,255,255,0.15));
+      border-radius: 10px;
+      z-index: -1;
+      filter: blur(12px);
+      animation: neonPulse 3s ease-in-out infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes neonPulse {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; }
+    }
+
+    .games-header {
+      padding: 1.5rem;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      z-index: 1;
+    }
+
+    .site-title {
+      font-size: 2.5rem;
+      margin: 0 0 0.5rem 0;
+      background: linear-gradient(45deg, #fff, #a0a0a0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+
+    .games-title {
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    #searchApps {
+      width: 80%;
+      max-width: 400px;
+      padding: 0.8rem 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 25px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      margin: 1rem auto 0 auto;
+      display: block;
+    }
+
+    #searchApps:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    #searchApps::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex-grow: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    .games-grid::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .games-grid::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      margin: 4px;
+      border-radius: 4px;
+    }
+
+    .games-grid::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    .games-grid::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .game-item {
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .game-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .game-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .game-title {
+      font-size: 0.9rem;
+      color: #fff;
+      margin: 0;
+      font-weight: normal;
+      transition: all 0.3s ease;
+    }
+
+    .game-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .game-item:hover .game-title {
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      .games-box {
+        width: 95%;
+        height: 80vh;
+      }
+      .games-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        padding: 1rem;
+      }
+      .game-icon {
+        width: 48px;
+        height: 48px;
+      }
+      .game-title {
+        font-size: 0.8rem;
+      }
+      .site-title {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars"></div>
+  <div id="header"></div>
+
+  <div class="container">
+    <div class="games-box">
+      <div class="games-header">
+        <h1 class="site-title">Void Network</h1>
+        <h2 class="games-title">Apps</h2>
+        <input type="text" id="searchApps" placeholder="Search apps...">
+      </div>
+      <div class="games-grid" id="gamesList"></div>
+    </div>
+  </div>
+
+  <div id="footer"></div>
+
+  <script>
+    function createStars() {
+      const starsContainer = document.querySelector('.stars');
+      const numberOfStars = 400;
+
+      for (let i = 0; i < numberOfStars; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        
+        const size = Math.random() * 5;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        const duration = 20 + Math.random() * 20;
+        star.style.animationDuration = `${duration}s`;
+        star.style.animationDelay = `${Math.random() * duration}s`;
+        star.style.opacity = Math.random() * 0.8 + 0.2;
+        
+        starsContainer.appendChild(star);
+      }
+    }
+
+    async function loadHTML(url, elementId) {
+      try {
+        const response = await fetch(url);
+        const html = await response.text();
+        document.getElementById(elementId).innerHTML = html;
+      } catch (error) {
+        console.error(`Error loading ${url}:`, error);
+      }
+    }
+
+    const stockSW = "/uv/sw.js";
+    const swAllowedHostnames = ["localhost", "127.0.0.1"];
+    
+    async function registerSW() {
+      try {
+        if (!navigator.serviceWorker) {
+          if (location.protocol !== "https:" && !swAllowedHostnames.includes(location.hostname))
+            throw new Error("Service workers cannot be registered without https.");
+          throw new Error("Your browser doesn't support service workers.");
+        }
+        await navigator.serviceWorker.register(stockSW);
+      } catch (err) {
+        console.error('Error registering service worker:', err);
+      }
+    }
+
+    async function initializeUV() {
+      try {
+        if (!window.__uv || !__uv$config) {
+          throw new Error('Ultraviolet not properly initialized');
+        }
+        await registerSW();
+      } catch (err) {
+        console.error('Error initializing Ultraviolet:', err);
+      }
+    }
+
+    let defaultApps = [
+      {
+        title: "Netflix",
+        imgSrc: "/appimg/netflix.png",
+        link: "https://netflix.com"
+      },
+      {
+        title: "Hulu",
+        imgSrc: "https://assetshuluimcom-a.akamaihd.net/h3o/icons/favicon.ico.png",
+        link: "https://www.hulu.com"
+      },
+      {
+        title: "Google",
+        imgSrc: "/appimg/google.webp",
+        link: "./ta"
+      },
+      {
+        title: "ChatGpt",
+        imgSrc: "/appimg/chatgpt.webp",
+        link: "https://deepai.org"
+      },
+      {
+        title: "C.ai",
+        imgSrc: "https://lh7-us.googleusercontent.com/gjIJGro8Ddy0NMCiSgvDpZ5IYdStj-197RAJu2nvnyUxUTQkGA1ugmHBKcwyQSdP6j44p3OFh5f1Yqfx_0fjIaAHk0BO0J0GMrepyP9gHr8cqR2BWQ4E9DSaUqugQcxYtY37Z09kjakjiqYPuaLybr1nNRc_YQ",
+        link: "https://character.ai"
+      },
+      {
+        title: "Discord",
+        imgSrc: "/appimg/discord.webp",
+        link: "https://discord.com/"
+      },
+      {
+        title: "Tubi",
+        imgSrc: "https://m.media-amazon.com/images/I/715irEQPXzL.png",
+        link: "https://tubitv.com/"
+      },
+      {
+        title: "Cool Math Games",
+        imgSrc: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwROf_FVSh9WkFeG15X-kVysnKddaMHvxSEA&s",
+        link: "https://www.coolmathgames.com"
+      },
+      {
+        title: "Snapchat",
+        imgSrc: "/appimg/snapchat.jpg",
+        link: "https://www.snapchat.com"
+      },
+      {
+        title: "Youtube",
+        imgSrc: "/appimg/youtube.jpg",
+        link: "https://www.youtube.com/shorts"
+      },
+      {
+        title: "Tiktok",
+        imgSrc: "/appimg/tiktok.jpg",
+        link: "https://www.tiktok.com"
+      },
+      {
+        title: "Spotify",
+        imgSrc: "/appimg/spotify.jpeg",
+        link: "https://open.spotify.com"
+      },
+      {
+        title: "Xbox Cloud Gaming",
+        imgSrc: "/appimg/xboxcloud.png",
+        link: "https://www.xbox.com/en-us/play"
+      },
+      {
+        title: "Reddit",
+        imgSrc: "/appimg/redit.jpg",
+        link: "https://www.reddit.com"
+      },
+      {
+        title: "KBH Games",
+        imgSrc: "/appimg/kbhgames.jpeg",
+        link: "https://kbhgames.com"
+      },
+      {
+        title: "Crazy Games",
+        imgSrc: "/appimg/Crazygames_jpg_logo.jpg",
+        link: "https://www.crazygames.com"
+      },
+      {
+        title: "Void Network Movies",
+        imgSrc: "https://lh7-us.googleusercontent.com/QTCoMxIz3RBckoShyk1mFjo23Sz1rfEf1pD7Eh1PHgW-g5QaQe5ebDi4_f5xtnRDKGPpHXJhmgrRLFEkWVVJZwI3XY2gbKAfo_yFVLoilwLFDppo4nPbzIrnUx__Cx53AtIb75hd1wbUdgeY0bOjgaIAcuEu9Q",
+        link: "https://mega.nz/folder/6J9iBQ7A#JZqvYH9wm-YRl_ZlnoK-cg"
+      },
+      {
+        title: "Itch.io",
+        imgSrc: "https://lh7-us.googleusercontent.com/tsqCKsr5eJWbZ2sS-vWCtcxHE0BToURQg_Spr4UOXdQgeqQAefy4C9iUJV21RKZ-gG4qNV47n60oXyphgQ40Noa6yXqalyiX1KOG4YuVT9SSuCi4YGTrPHYT1j26piMef1Ewi_x63KzHQPvwnJnvUiZNVQfyFQ",
+        link: "https://itch.io"
+      },
+      {
+        title: "Byvolp",
+        imgSrc: "data:image/webp;base64,UklGRkYEAABXRUJQVlA4IDoEAABwFQCdASpAAEAAPi0Ki0WhkNDN+BgCxLYATplXnEPWfxV/Zn/M/InVf77+FP2gytbbT7bvft6x9vF5nP1m/YDseegf0rPoAeap/1/2x+GT9t/2j9qM7VdKVNI8oDCQ1lUfQxnLkfUSQ3xzf06FnOqwQeEL8HRIrEWqvY0qNE96WMIVuUM0wGrpPOs5Unvit1ifIhjP9xtTOfu/l1le8B62wvqnTsR+PjWjWj6KS6XDIXZ5kPwA/v86a19w+RX3tOqfK8qweY2zdUIOR3IrR+CObv/7fdFwsNK3ujjKLAeBr8NcYOIYG+KppvBZjPmg7kLcLSxh+q8AovzL5n9Gon1mL9kWbZsBvRWbkeT+xq81in/3dF2yz/ys0xiNcwvtlJXgvw4giQCcnN34f2URvpS9p5SbYU+kNxKjoDsjUjsLkh697M4VrkFT4evY0SHFJ/FqbriNpk59KpJ1hDU+03gY/MLWrk6adHj/tHgtdKum+Z+9Unnoy8V/yMeB8y59SEsizIkPhDKMthSdsSOUrY5TQzPOhvNTil5m3fO69/QpF6HEM/G7ZBsKwBZDrAgef8ZifV4MRXBQnpUfVdjOfsMqzoxxOwGN5yh/a/Flf1pQHbzg5n3Yeg2cpLjTvz6fxagM/a+kRMps2YrW15p4K0tG3onFx7O7uRR2xbt3I33LHAvk+vI4dP+eTmPiqXF851ZNAjauEpALtvevQtX2Hs8x9vicHZRt9lLCjZYUM1JFRgjLl5BcHWYZSYLLlZ7JKWXVGP47fCHLtM0lv1LeJKs4mvfY7aSSOwg/9egHUfywddLELUV0GA/Cu2xHAWIqoeui+7KaYwnILymawQQ2jo21vgZ79RWCZ+GPXnBhoNTr+uX/4K9D8cJtn6hGMe+iRsd86WIv6Mt20oN0fh61GeJHWXuhZ1P7g/LhhWKmu5gRoIMrAVVVmc67bwxePM+jf/OZYPPTUlhnXt3Ic1f1Qr+RX041yVe9ipP+lm8sOMmP0+6x3fu0N0QdoEgZ3ufp3dHiE+MsIZeyWzsDkoHv9PDySOnYXq1yVqJ4QoGNY1C1TMYsdtdN8rfSac+lEzmp2UL8EtcqA+/gKiGwNGz5rUu+8bj7wFtad5cCMuoJSTAU85fA3TGXJD3n80wR21ZxxBZf1/0k5SmpH5/9G47kQg+Vb/1pp2bAfYz84WlT2y8J4Wd3mMlIgGoKuB3vCPHq20VaWAQqXNt89tGDIAp4SHhVcrmQZGhFO2BScDpZHmt1/YfZNJ/3ttd/5yV+IlYymTPAXeIQRLbrlBzzi8teL4WOwKStm/43UwuoxFTi6u/0ee0Im5/ZaUg2zH+KeS52Qha/9iVkoDGZZCJZlnhljmjRtzZu40wXvNtPp1yBVmni/j0m6S+b/H4ABDRqNfYWUjCtNmeRw7MYo8yE3l4BztWnRA7b5ts4qAAAAA==",
+        link: "https://byvolp.web.app/games/index.html"
+      },
+      {
+        title: "Scratch",
+        imgSrc: "https://lh7-us.googleusercontent.com/h-C_T3nObFIAEvl90InJVgWjq2EKLbLGPYg48R-524QlHLeRabpNlVt1E43bXu_Nd7Gyc1UWKEgly2twb9agFdis-jdQbxb7BDobAhHYOjl_eyrHgVc5ProgwxBlZpXfJVzTCVj-iIvZqupytr0jzixb_xz9ow",
+        link: "https://scratch.mit.edu/explore/projects/all"
+      },
+      {
+        title: "Now.gg",
+        imgSrc: "https://lh7-us.googleusercontent.com/yYUBlzdbc-zK9bt_WpYSGje9ow0uZ0o3G9Jd1DaHc1qV41GAvekR39CnksWIQSphsgpeIyde6tGqCgfUgeD_OiKKy1azVfkVYC_xqyu2FsgldwMYmcj8VUdGrnuGJelxisMB1Xl5MUUgPAMtPS5JiIvio8vTWw",
+        link: "https://now.gg"
+      },
+      {
+        title: "Crazy Sports",
+        imgSrc: "https://lh7-us.googleusercontent.com/hTOUCALGi8n6Wj7mAQOfcY5kKGSXoKY5LoCxyHT9Oo8xfEwRYcLbojpzO_rPFSJqZK8lM5C-DUbun7Wk3mlPbt55elSoNVzChb3gxxN5T4L7f9pST1Ckc9LTHdoQF4RBkBZedn-3wyPhRXNVIMt58qa7P8GMrw",
+        link: "https://test-theta-eight-39.vercel.app"
+      },
+      {
+        title: "9anime",
+        imgSrc: "https://lh7-us.googleusercontent.com/_EkmKJ4k-Hhdz7vT-vikmrfp3R5-Ldy-Jb8zCC0sBm5ILUhvcclFzIx1h6CQF4aWuJkrR8kAzshlEjiwvSIyi-rNjdJG7anAPilKCxSLkTeFQ2xmuQA_nOjuAePBBmwnIcD9kDzOkor1dJ1OQo86NmPq-8y7Tg",
+        link: "https://9animetv.to"
+      },
+      {
+        title: "Twitch",
+        imgSrc: "https://lh7-us.googleusercontent.com/1bCnBMdn9M51jgUy5tRWA1o7qkO5ezxq6Qo4FpMS-LXTnP5MJUgGfoJHAXx68kidtjIYe9cKBM5ZV9dwAFviWwW9fYNtdnJUS4-f6ff4YmP-p-67B8OqJfjKnMJJqjRrF9ewkiJWpA2sqWNcuyGFQ_9bvHjU7w",
+        link: "https://www.twitch.tv"
+      },
+      {
+        title: "Github",
+        imgSrc: "https://lh7-us.googleusercontent.com/BebSUbSt4y06MsCVLXB-x2vs5NhbyaZmiCli_w03sco46wgtGgJkLqFbpX679-wqayNYdntQ-8hXtfh8U7fEisz8-jD-qIM-lDUvkicrH4rewiuXL-E5mihseC_Nawjk-wUSWlSyiYlvlvoAAKcP4xvX1W7C7A",
+        link: "https://github.com"
+      },
+      {
+        title: "HoodaMath",
+        imgSrc: "https://lh7-us.googleusercontent.com/bUuvpLH4tRyovmquyp-DlvE0aW6tImIvOSvq4oK-RytlkUSH7rbrhWMRkXlT-ca96qLztAOXery9PpUAmIWnEoIlL72qQs79SX46mEu2ucHa5oxstme4WS_qW9mMuXWP0m_jQZdLIRkPBEPvpZ7_bS5TGFBntg",
+        link: "https://www.hoodamath.com/#gsc.tab=0"
+      },
+      {
+        title: "Apple Music",
+        imgSrc: "https://lh7-us.googleusercontent.com/OSj8nAatigDl07y-HtTz2kpM_lcrpPZBmHMsWHmqeHJ6uzA5gZFzGMB5S9egY6G73tfydQlwANAtmSx5BQS-eslJ9mCVf9oBAJsHwc__iF2YBQqlRUvX9-4ADU4Q_ZaEzZSp8p2YxaXyB7AW57BtTL8e_S79Q",
+        link: "https://music.apple.com/us/new"
+      },
+      {
+        title: "Vidbinge",
+        imgSrc: "https://lh7-us.googleusercontent.com/zI8NsPINlsHH3TWralF9mkLf0xsG2Hl-xKuwbJ5StWC2HOQRX8BMoo5QLqA-sD_nyt6kj8oPCWXaaOHiP6r0u4NXCFEMpX4FIw4Qf-M-TlvGGUbwHvHGlD7p8IVLQJPTy9RpSnjaN4B2TLEAKaVyL78RjUeGlw",
+        link: "https://www.vidbinge.com"
+      },
+      {
+        title: "Disney Plus",
+        imgSrc: "https://lh7-us.googleusercontent.com/wsqRrone5cSXW6meq_V6B1kSbApOhcqICtDyuao8IxfAt4zfk-1P1EZHVWhqbENmxeKg40Shbpsw_R2YQhdF5-1-qg-b7TuNqXdry6MI_O3FHbJHNN7eh4U0vcBItz6Xz4s2dpQ-_uyfDcQwuuaqWL8EJwPgcQ",
+        link: "https://www.disneyplus.com/welcome/stream"
+      }
+    ];
+
+    function renderAppsList() {
+      const gamesList = document.getElementById("gamesList");
+      if (!gamesList) return;
+
+      gamesList.innerHTML = '';
+
+      defaultApps.forEach(app => {
+        const appElement = document.createElement("div");
+        appElement.className = "game-item";
+        
+        appElement.innerHTML = `
+          <div class="game-icon">
+            <img src="${app.imgSrc}" alt="${app.title} icon">
+          </div>
+          <h3 class="game-title">${app.title}</h3>
+        `;
+        
+        // FIXED onClick logic:
+        appElement.onclick = () => {
+          // If link starts with "./", navigate directly
+          if (app.link.startsWith("./")) {
+            window.location.href = app.link;
+          } else {
+            try {
+              const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(app.link);
+              window.location.href = `/Classes.html?game=${encodeURIComponent(encodedUrl)}`;
+            } catch (err) {
+              console.error('Error encoding URL:', err);
+              alert('There was an error loading this app. Please try again.');
+            }
+          }
+        };
+
+        gamesList.appendChild(appElement);
+      });
+    }
+
+    document.getElementById("searchApps").addEventListener("keyup", function() {
+      const gamesList = document.getElementById("gamesList");
+      const searchTerm = this.value.toLowerCase();
+      
+      gamesList.innerHTML = '';
+
+      defaultApps.forEach(app => {
+        if (app.title.toLowerCase().includes(searchTerm)) {
+          const appElement = document.createElement("div");
+          appElement.className = "game-item";
+          
+          appElement.innerHTML = `
+            <div class="game-icon">
+              <img src="${app.imgSrc}" alt="${app.title} icon">
+            </div>
+            <h3 class="game-title">${app.title}</h3>
+          `;
+          
+          // Same fix in the search logic:
+          appElement.onclick = () => {
+            if (app.link.startsWith("./")) {
+              window.location.href = app.link;
+            } else {
+              try {
+                const encodedUrl = __uv$config.prefix + __uv$config.encodeUrl(app.link);
+                window.location.href = `/Classes.html?game=${encodeURIComponent(encodedUrl)}`;
+              } catch (err) {
+                console.error('Error encoding URL:', err);
+                alert('There was an error loading this app. Please try again.');
+              }
+            }
+          };
+
+          gamesList.appendChild(appElement);
+        }
+      });
+    });
+
+    window.addEventListener('load', async () => {
+      try {
+        await initializeUV();
+        createStars();
+        renderAppsList();
+      } catch (err) {
+        console.error('Error during initialization:', err);
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      try {
+        await Promise.all([
+          loadHTML("/assets/html/header.html", "header"),
+          loadHTML("/assets/html/footer.html", "footer")
+        ]);
+      } catch (error) {
+        console.error("Initialization error:", error);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<html>
+    <head>
+        <title>Settings</title>
+        <link href="/assets/css/styles.css" rel="stylesheet">
+        <script src="/config.js"></script>
+        <script src="/uv/uv.config.js"></script>
+        <script src="/global.js"></script>
+        <script src="/assets/js/ads.js"></script>
+        <script src="/assets/js/favicon-handler.js"></script>
+        <link id="favicon" rel="icon" href="img/appimg/BLANK_ICON.png">
+    <style>
+        .dropdown {
+        position: relative;
+        display: inline-block;
+        background-color: rgba(0, 0, 0, 0.6);
+        padding: 1vh;
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+        .dropdown-content button {
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        font-size: medium;
+        padding: 0.8rem;
+        width: 100%;
+        text-align: left;
+        transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .button {
+        background-color: rgba(0, 0, 0, 0.6);
+        border: none;
+        color: white;
+        font-size: medium;
+        padding: 1vh;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+        }
+        button:hover,
+        .dropdown-content button:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        min-width: 160px;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+        padding: 12px 16px;
+        border-radius: 8px;
+        z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+        display: block;
+        }
+
+        .icon-selector {
+        margin: 10px;
+        padding: 10px;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 8px;
+        box-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+
+        .icon-option {
+        margin: 5px;
+        padding: 5px;
+        cursor: pointer;
+        transition: transform 0.2s ease, color 0.3s ease;
+        }
+
+        .icon-option:hover {
+        transform: scale(1.1);
+        color: #ccc;
+        }
+        .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+        }
+
+        .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        }
+
+        .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(255, 255, 255, 0.2);
+        transition: 0.4s;
+        border-radius: 34px;
+        }
+
+        .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+        }
+
+        input:checked + .slider {
+        background-color: #2196F3;
+        box-shadow: 0 0 10px rgba(33, 150, 243, 0.6);
+        }
+
+        input:focus + .slider {
+        box-shadow: 0 0 15px rgba(33, 150, 243, 0.8);
+        }
+
+        input:checked + .slider:before {
+        transform: translateX(26px);
+        }
+
+        .settingswidget {
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        margin: 10px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        .settingswidget h1 {
+        color: white;
+        margin-bottom: 15px;
+        font-size: 1.5rem;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+    </style>
+    <script>
+        // Anti-close system
+        (function() {
+            // Main functions for handling anti-close behavior
+            function setupAntiClose() {
+                window.addEventListener('beforeunload', showWarning);
+                updateActiveState(true);
+            }
+
+            function removeAntiClose() {
+                window.removeEventListener('beforeunload', showWarning);
+                updateActiveState(false);
+            }
+
+            function showWarning(e) {
+                // Don't show warning for redirects or if system is disabled
+                if (!e.target.location.href.includes("redirect") && localStorage.getItem('anticlose') === 'true') {
+                    e.preventDefault();
+                    e.returnValue = 'Leave site? Changes you made may not be saved.';
+                    return e.returnValue;
+                }
+            }
+
+            // Update active state and handle UI if present
+            function updateActiveState(isActive) {
+                // Update checkbox if it exists on the current page
+                const checkbox = document.getElementById('cbox_anticlose');
+                if (checkbox) {
+                    checkbox.checked = isActive;
+                }
+            }
+
+            // Initialize anti-close system
+            function initAntiClose() {
+                // Check if anti-close is enabled in localStorage
+                const isEnabled = localStorage.getItem('anticlose') === 'true';
+                
+                // Set up initial state
+                if (isEnabled) {
+                    setupAntiClose();
+                } else if (localStorage.getItem('anticlose') === null) {
+                    // First time initialization
+                    localStorage.setItem('anticlose', 'false');
+                }
+
+                // Update UI to match current state
+                updateActiveState(isEnabled);
+            }
+
+            // Toggle function for the anti-close feature
+            window.toggleAntiClose = function() {
+                const currentState = localStorage.getItem('anticlose');
+                
+                if (currentState === null || currentState === 'false') {
+                    localStorage.setItem('anticlose', 'true');
+                    setupAntiClose();
+                    // Notify other tabs
+                    window.dispatchEvent(new StorageEvent('storage', {
+                        key: 'anticlose',
+                        newValue: 'true',
+                        oldValue: currentState,
+                        storageArea: localStorage
+                    }));
+                } else {
+                    localStorage.setItem('anticlose', 'false');
+                    removeAntiClose();
+                    // Notify other tabs
+                    window.dispatchEvent(new StorageEvent('storage', {
+                        key: 'anticlose',
+                        newValue: 'false',
+                        oldValue: currentState,
+                        storageArea: localStorage
+                    }));
+                }
+            };
+
+            // Listen for changes from other tabs/windows
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'anticlose') {
+                    if (e.newValue === 'true') {
+                        setupAntiClose();
+                    } else {
+                        removeAntiClose();
+                    }
+                }
+            });
+
+            // Initialize when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initAntiClose);
+            } else {
+                initAntiClose();
+            }
+        })();
+
+        // Original functions
+        function toggleCloaking() {
+            if (localStorage.getItem('cloaking') === null) {
+                localStorage.setItem("cloaking", 'true')
+                return
+            }
+            if (localStorage.getItem('cloaking') == 'true') {
+                localStorage.setItem('cloaking', 'false')
+                return
+            }
+            if (localStorage.getItem('cloaking') == 'false') {
+                localStorage.setItem('cloaking', 'true')
+                return
+            }
+        }
+
+        function setSearchType(type) {
+            localStorage.setItem('searchBackend', type)
+        } 
+
+        function addApp() {
+            if (localStorage.getItem('apps') == null) {
+                alert("Please load apps properly first")
+                return
+            }
+            const appsData = JSON.parse(localStorage.getItem("apps"))
+            const newApp = {
+                title: prompt("Title?"),
+                imgSrc: prompt("Image?"),
+                link: prompt("Link?")
+            }
+            newApp.link = __uv$config.prefix + __uv$config.encodeUrl(newApp.link)
+            appsData.push(newApp)
+            localStorage.setItem("apps", JSON.stringify(appsData))
+        }
+
+        // Window load handler
+        window.onload = function() {
+            if (localStorage.getItem('cloaking') === 'true') {
+                document.getElementById("cbox_cloaking").checked = true;
+            }
+            if (localStorage.getItem('anticlose') === 'true') {
+                document.getElementById("cbox_anticlose").checked = true;
+            }
+        }
+    </script>
+    </head>
+<body>
+    <div id="header"></div>
+    <div id="footer"></div>  
+    <script>
+        loadHTML("/assets/html/header.html", "header")
+        loadHTML("/assets/html/footer.html", "footer")
+    </script>
+
+    <div>
+        <br><br><br>
+        <div class="settingswidget">
+            <h1>About blank cloaking</h1>
+            <label class="switch">
+                <input type="checkbox" id="cbox_cloaking" onclick="toggleCloaking()">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div class="settingswidget">
+            <h1>Anti Close</h1>
+            <label class="switch">
+                <input type="checkbox" id="cbox_anticlose" onclick="toggleAntiClose()">
+                <span class="slider round"></span>
+            </label>
+        </div>
+        <div class="settingswidget">
+            <h1>Search type</h1>
+            <div class="dropdown">
+                <span>Select</span>
+                <div class="dropdown-content">
+                    <button onclick="setSearchType('UV')">Ultravoilet</button>
+                    <br>
+                    <button>Coming soon</button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="settingswidget">
+            <h1>Tab Icon Changer</h1>
+            <div class="icon-selector">
+                <div class="icon-option">
+                    <button class="button" onclick="changeFavicon('https://www.google.co.uk/images/branding/googleg/1x/googleg_standard_color_128dp.png', 'Google')">Google</button>
+                </div>
+                <div class="icon-option">
+                    <button class="button" onclick="changeFavicon('https://www.ixl.com/ixl-favicon.png', 'IXL Math Practice')">IXL</button>
+                </div>
+                <div class="icon-option">
+                    <button class="button" onclick="changeFavicon('https://static.wixstatic.com/media/5faaf7_dc955e12006e4873a999f1f6a455f82f~mv2.png/v1/fill/w_192%2Ch_192%2Clg_1%2Cusm_0.66_1.00_0.01/5faaf7_dc955e12006e4873a999f1f6a455f82f~mv2.png', 'BrainPOP')">Brain Pop</button>
+                </div>
+                <div class="icon-option">
+                    <button class="button" onclick="changeFavicon('https://ssl.gstatic.com/classroom/favicon.png', 'Home')">Google Classroom</button>
+                </div>
+                <div class="icon-option">
+                    <button class="button" onclick="changeFavicon('appimg/BLANK_ICON.png', '‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎ ‎')">Blank</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

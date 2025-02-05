@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <script src="/assets/js/favicon-handler.js"></script>
+<head>
+    <script src="/config.js"></script>
+    <link rel="stylesheet" href="/assets/css/styles.css" type="text/css">   
+    <script src="/assets/js/particles.js"></script>
+    <script>
+        particlesJS.load('particles-js', '/assets/json/particles.json');
+    </script>
+    <script>
+        function redirect(location) {
+            window.location.href = location;
+        }
+    </script>
+
+    <style>
+        /* Apply the Orbitron font for a futuristic style */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+        body {
+            background-color: rgb(41, 41, 41);
+            font-family: 'Orbitron', sans-serif;
+            color: #d1d1d1;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            overflow-x: hidden;
+        }
+        h1 {
+            font-size: 3em;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            position: relative;
+            color: white;
+            animation: glowBlue 3s infinite alternate;
+        }
+        p {
+            font-size: 1.5em;
+            line-height: 1.8;
+            animation: slideIn 2s ease-out;
+        }
+        @keyframes glowBlue {
+            0% {
+                text-shadow: 0 0 5px #001f4d, 0 0 10px #001f4d, 0 0 15px #001f4d;
+            }
+            100% {
+                text-shadow: 0 0 10px #001f4d, 0 0 20px #001f4d, 0 0 30px #001f4d;
+            }
+        }
+        @keyframes slideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        .content {
+            position: relative;
+            z-index: 1;
+            color: white;
+        }
+        .privacy-content {
+            max-width: 800px;
+            width: 95%;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            margin: 80px auto;
+            position: relative;
+            z-index: 1;
+        }
+        .privacy-content h2 {
+            color: #4a9eff;
+            margin-top: 1.5rem;
+            font-size: 1.3rem;
+        }
+        .privacy-content p {
+            margin-bottom: 1rem;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <div id="header" class="content">
+        <p>Loading header...</p>
+    </div>
+
+    <div>
+        <br><br><br>
+        <div class="privacy-content">
+            <h1>Privacy Policy</h1>
+            
+            <p>There is no need for a Privacy Policy because this is the enhanced version of Void Network :0</p>
+        </div>
+    </div>
+
+    <div id="footer" class="content">
+        <p>Loading footer...</p>
+    </div>
+
+    <script>
+        function loadHTML(url, elementId) {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    document.getElementById(elementId).innerHTML = xhr.responseText;
+                }
+            };
+            xhr.send();
+        }
+        // Load header and footer HTML files
+        loadHTML("/assets/html/header.html", "header");
+        loadHTML("/assets/html/footer.html", "footer");
+    </script>
+</body>
+</html>

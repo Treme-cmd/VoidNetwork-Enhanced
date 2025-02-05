@@ -1,0 +1,65 @@
+<style>
+    .header {
+        position: fixed;
+        width: 100%;
+        background: linear-gradient(90deg, rgba(20,20,20,0.95) 0%, rgba(30,30,30,0.95) 50%, rgba(20,20,20,0.95) 100%);
+        color: white;
+        left: 0;
+        padding: 1rem;
+        top: 0;
+        z-index: 1000;
+        font-size: 0.8rem;
+        font-family: "Be Vietnam Pro", sans-serif;
+        font-weight: 700;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        transition: all 0.3s ease;
+    }
+    .header:hover {
+        background: linear-gradient(90deg, rgba(15,15,15,0.98) 0%, rgba(25,25,25,0.98) 50%, rgba(15,15,15,0.98) 100%);
+    }
+    .home_bttn {
+        background-color: transparent;
+        border: none;
+        height: 3vh;
+        width: 3vh;
+        margin: 0 1.5rem;
+        transition: all 0.3s ease;
+        filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+    }
+    .home_bttn:hover {
+        transform: scale(1.2);
+        filter: drop-shadow(0 0 10px rgba(255,255,255,0.8));
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+</style>
+
+<header class="header">
+    <a href="/">
+        <img src="/nav/home.png" class="home_bttn" alt="Home">
+    </a>
+    <a href="/ta">
+        <img src="/nav/search.png" class="home_bttn" alt="Search">
+    </a>
+    <a href="/app">
+        <img src="/nav/apps.png" class="home_bttn" alt="Apps">
+    </a>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', (event) => {
+    const buttons = document.querySelectorAll('.home_bttn');
+    buttons.forEach((button, index) => {
+        setTimeout(() => {
+            button.style.animation = 'pulse 2s infinite';
+        }, index * 200);
+    });
+});
+</script>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <script src="/global.js"></script> <!--Terminal is not meant to actualy be loaded as a standalone page, so it wont have the acompaning funcitions-->
+		<script>
+			function eval_script(script) {
+				let retval = ""
+				if (script.includes("localStorage.setItem(")) {
+					retval =  "WARN: localStorage.setItem is a dangerous operation \n"
+				}
+				if (script.include)
+				eval(script)
+				return retval
+			}
+		</script>
+	</head>
+
+	<body>
+	</body>
+</html>
+
+
+<html>
+<head>
+    <style>
+        body, html {
+            background-color: #212121;
+            color: #ffffff;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+        .terminal-typearea {
+            width: 100%;
+            height: 90%;
+            font-size: 24px;
+            padding: 20px;
+            box-sizing: border-box;
+            border: none;
+            outline: none;
+            resize: none;
+            overflow-y: auto;
+            background-color: #212121;
+            color: white;
+            overflow: "hidden"
+        }
+    </style>
+</head>
+
+<body>
+<textarea  id="terminal" class="terminal-typearea" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"> 
+</textarea>
+<script>
+let commands = {
+    clear: function() {
+        document.getElementById("terminal").value = "root@void $ "
+
+    }
+}
+var textarea = document.getElementById("terminal");
+textarea.innerHTML = "root@void $ "
+textarea.addEventListener("keydown", function (e) {
+if (e.key == "t" && e.altKey) {
+    window.parent.document.getElementById("terminal").remove()
+}
+let splitlen = document.getElementById("terminal").value.split("\n")
+if (e.key === "Backspace" && splitlen[splitlen.length - 1].slice(0, -1).includes("root@void $ ") == false) {
+    e.preventDefault()
+}
+if (e.key === "Enter" && splitlen[splitlen.length - 1].replaceAll("root@void $ ", "") === "clear" || splitlen[splitlen.length - 1].replaceAll("root@void $ ", "") === "clear " || splitlen[splitlen.length - 1].replaceAll("root@void $ ", "") === " clear") {
+    e.preventDefault()
+    commands.clear()
+    return;
+} 
+if (e.key === "Enter") {
+
+    let splitlen = document.getElementById("terminal").value.split("\n")
+    e.preventDefault()
+        try {
+            eval(splitlen[splitlen.length-1].replaceAll("root@void $ ", ''))
+            document.getElementById("terminal").value =  document.getElementById("terminal").value + "\n" + "root@void $ "
+        } catch (e) {
+            document.getElementById("terminal").value = document.getElementById("terminal").value + "\n" + `Command failed: ${e}`
+            document.getElementById("terminal").value =     document.getElementById("terminal").value + "\n" + "root@void $ "
+    }
+    }
+}); 
+</script>
+</body>
+</html>

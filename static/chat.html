@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<script>(function(){function setupAntiClose(){window.addEventListener('beforeunload',showWarning);window.addEventListener('keydown',handleKeyPress);updateActiveState(true)}function removeAntiClose(){window.removeEventListener('beforeunload',showWarning);window.removeEventListener('keydown',handleKeyPress);updateActiveState(false)}function handleKeyPress(e){if((e.ctrlKey&&e.key==='w')||(e.metaKey&&e.key==='w')){{if(localStorage.getItem('anticlose')==='true'){e.preventDefault();e.returnValue='Leave site? Changes you made may not be saved.';return e.returnValue}}}}function showWarning(e){if(!e.target.location.href.includes("redirect")&&localStorage.getItem('anticlose')==='true'){e.preventDefault();e.returnValue='Leave site? Changes you made may not be saved.';return e.returnValue}}function updateActiveState(isActive){const checkbox=document.getElementById('cbox_anticlose');if(checkbox){checkbox.checked=isActive}}function initAntiClose(){const isEnabled=localStorage.getItem('anticlose')==='true';if(isEnabled){setupAntiClose()}else if(localStorage.getItem('anticlose')===null){localStorage.setItem('anticlose','false')}updateActiveState(isEnabled)}window.addEventListener('storage',function(e){if(e.key==='anticlose'){if(e.newValue==='true'){setupAntiClose()}else{removeAntiClose()}}});if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',initAntiClose)}else{initAntiClose()}})();</script>
+<head>
+    <link rel="icon" type="image/png" href="https://ssl.gstatic.com/classroom/favicon.png">
+    <title>New Tab</title>
+
+    <style>
+        #particles-js {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 0;
+            margin: 0;
+        }
+        .iframe-section {
+            width: 95%;
+            max-width: 1200px;
+            height: 80%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        iframe {
+            flex: 1;
+            border: none;
+            border-radius: 15px;
+        }
+        @media (max-width: 800px) {
+            .iframe-section {
+                height: auto;
+                padding-bottom: 75%;
+            }
+            iframe {
+                height: 100%;
+            }
+        }
+        .title {
+            font-size: 1.5rem;
+            text-align: center;
+            color: #fff;
+            margin-bottom: 10px;
+            position: relative;
+            animation: slideIn 2s ease-in-out forwards;
+            opacity: 0;
+        }
+        @keyframes slideIn {
+            0% {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <script src="/global.js"></script>
+    <script src="/config.js"></script>
+
+    <!-- UV things -->
+    <script src="uv/uv.bundle.js"></script>
+    <script src="uv/uv.config.js"></script>
+</head>
+
+<body>
+
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+    <script src="/assets/js/particles.js"></script>
+    <script>
+        particlesJS.load('particles-js', '/assets/json/particles.json');
+    </script>
+
+    <!-- Dynamically Loaded Header -->
+    <div id="header"></div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="iframe-section">
+            <iframe id="proxyFrame" width="100%" height="100%" allowtransparency="true" frameborder="0"></iframe>
+        </div>
+    </div>
+
+    <!-- Dynamically Loaded Footer -->
+    <div id="footer"></div>
+
+    <script>
+        function loadHTML(url, elementId) {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById(elementId).innerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading HTML:', error);
+                    document.getElementById(elementId).innerHTML = `<p>Error loading content: ${error.message}</p>`;
+                });
+        }
+
+        // Load header and footer
+        loadHTML("/assets/html/header.html", "header");
+        loadHTML("/assets/html/footer.html", "footer");
+
+        // Function to encode URL for UV proxy
+        function encodeUrl(url) {
+            return __uv$config.prefix + __uv$config.encodeUrl(url);
+        }
+
+        // Set initial iframe src
+        window.onload = function() {
+            const originalUrl = "https://dull-tartan-curiosity.glitch.me";
+            const proxyUrl = encodeUrl(originalUrl);
+            document.getElementById('proxyFrame').src = proxyUrl;
+        };
+    </script>
+</body>
+</html>
