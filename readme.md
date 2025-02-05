@@ -1,5 +1,6 @@
 # Void Network: Enhanced
-    Not currently hosted anywhere, but I do plan on making it a static website so Vercel can run it
+    Currently hosted on Railway, but I hope to change that soon because it is slow
+    https://vne.up.railway.app
 
 ## Versioning rules:
     Unstable -> add a letter (example - v3.1.1 -> v3.1.1a)    
