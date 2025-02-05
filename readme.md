@@ -1,6 +1,6 @@
 # Void Network: Enhanced
     Currently hosted on Railway, but I hope to change that soon because it is slow
-    https://vne.up.railway.app
+https://vne.up.railway.app
 
 ## Versioning rules:
     Unstable -> add a letter (example - v3.1.1 -> v3.1.1a)    
@@ -18,3 +18,12 @@
     4. Uv 3 & rammerhead
     5. Adblock (for proxy) 
     6. Adblock (paid & for site)
+
+
+
+
+
+
+
+
+god i wish i could just host this on my network, but my wifi sucks :(
